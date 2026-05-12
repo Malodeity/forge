@@ -1,0 +1,49 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  release:
+    name: Create release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate before release
+        run: |
+          python3 -m json.tool templates/settings.json > /dev/null
+          python3 -m json.tool .claude/settings.json > /dev/null
+          bash -n install.sh
+          echo "✓ Pre-release validation passed"
+
+      - name: Extract version
+        id: version
+        run: echo "version=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.version }}
+          name: malodeity ${{ steps.version.outputs.version }}
+          body: |
+            ## Install
+
+            ```bash
+            # Latest
+            curl -fsSL https://raw.githubusercontent.com/Malodeity/Malodeity/main/install.sh | bash
+
+            # Pin to this version
+            curl -fsSL https://raw.githubusercontent.com/Malodeity/Malodeity/${{ steps.version.outputs.version }}/install.sh | bash
+
+            # npm
+            npx malodeity@${{ steps.version.outputs.version }} init
+            ```
+
+            See [README](https://github.com/Malodeity/Malodeity#readme) for full documentation.
+          draft: false
+          prerelease: ${{ contains(steps.version.outputs.version, '-') }}

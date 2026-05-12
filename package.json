@@ -1,0 +1,35 @@
+{
+  "name": "malodeity",
+  "version": "1.0.0",
+  "description": "God-level Claude Code engineering standards. Install in any project — data engineering, mobile, web backend, AI/ML.",
+  "keywords": [
+    "claude",
+    "claude-code",
+    "engineering-standards",
+    "architecture",
+    "system-design",
+    "ai-engineering"
+  ],
+  "homepage": "https://github.com/Malodeity/Malodeity",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Malodeity/Malodeity.git"
+  },
+  "license": "MIT",
+  "bin": {
+    "malodeity": "./bin/malodeity.js"
+  },
+  "scripts": {
+    "test": "echo 'No tests for the installer itself' && exit 0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "bin/",
+    "templates/",
+    ".claude/",
+    ".claudeignore",
+    "install.sh"
+  ]
+}
