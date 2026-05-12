@@ -1,0 +1,78 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git status)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git fetch*)",
+      "Bash(git pull*)",
+      "Bash(git add*)",
+      "Bash(git commit*)",
+      "Bash(git push*)",
+      "Bash(git branch*)",
+      "Bash(git stash*)",
+      "Bash(git show*)",
+      "Bash(git blame*)",
+      "Bash(npm run*)",
+      "Bash(npm test*)",
+      "Bash(npm install*)",
+      "Bash(npx *)",
+      "Bash(python -m pytest*)",
+      "Bash(python -m ruff*)",
+      "Bash(python -m mypy*)",
+      "Bash(ruff*)",
+      "Bash(mypy*)",
+      "Bash(pytest*)",
+      "Bash(find . *)",
+      "Bash(grep *)",
+      "Bash(ls*)",
+      "Bash(cat *)",
+      "Bash(wc *)",
+      "Bash(echo *)",
+      "Bash(mkdir *)",
+      "Bash(touch *)",
+      "Bash(which *)",
+      "Bash(pwd)",
+      "Bash(docker build*)",
+      "Bash(docker run*)",
+      "Bash(docker ps*)",
+      "Bash(docker images*)",
+      "Bash(docker compose*)",
+      "Bash(kubectl get*)",
+      "Bash(kubectl describe*)",
+      "Bash(kubectl logs*)"
+    ],
+    "deny": [
+      "Bash(git push --force origin main)",
+      "Bash(git push --force origin master)",
+      "Bash(git push -f origin main)",
+      "Bash(git push -f origin master)",
+      "Bash(rm -rf /)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"$(git rev-parse --show-toplevel 2>/dev/null || echo .)\" && (ruff check --quiet \"$CLAUDE_TOOL_INPUT_FILE_PATH\" 2>/dev/null || eslint --quiet \"$CLAUDE_TOOL_INPUT_FILE_PATH\" 2>/dev/null || true)"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"$(git rev-parse --show-toplevel 2>/dev/null || echo .)\" && echo '--- Session end ---' && git branch --show-current 2>/dev/null && git log --oneline -3 2>/dev/null && git status --short 2>/dev/null"
+          }
+        ]
+      }
+    ]
+  },
+  "cleanupPeriodDays": 1,
+  "includeCoAuthoredBy": false
+}

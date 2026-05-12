@@ -1,86 +1,59 @@
-# CLAUDE.md
+# CLAUDE.md — malodeity framework repo
+
+This is the **malodeity** source repo. The installable standards live in `templates/`.
+
+## What this repo is
+- `templates/CLAUDE.base.md` — the god-level engineering standards that get installed into user projects
+- `templates/CLAUDE.*.md` — stack-specific additions (python, node, mobile, data)
+- `install.sh` — bash installer (`curl -fsSL ... | bash`)
+- `bin/malodeity.js` — npm CLI (`npx malodeity init`)
+- `.claude/commands/` — slash commands installed into user projects (also used in this repo)
+- `templates/settings.json` — `.claude/settings.json` installed into user projects
 
 ## Stack
-- **Languages:** C#, Node.js, Python, Scala, Java
-- **AI/ML:** TensorFlow, PyTorch, Transformers, HuggingFace
-- **Reverse Engineering:** C, C++, Assembly, IDA Pro, x64dbg
-- **Web:** JavaScript, React, Vue, PHP, REST APIs, WebAssembly
-- **Databases:** PostgreSQL, MySQL, MongoDB, Redis, Oracle SQL
-- **DevOps:** Docker, AWS, Kubernetes, Linux
-- **Frontend:** React, Vue, Nuxt, Three.js
-
-## Architecture
-```
-src/        application source code
-tests/      test files, mirror src/ structure
-docs/       architecture decisions, API specs
-.claude/    Claude Code config (settings, commands, hooks)
-```
+- Bash (install.sh)
+- Node.js / CommonJS (bin/malodeity.js — minimal, no dependencies)
+- Markdown (all templates and commands)
 
 ## Commands
 | Task | Command |
 |---|---|
-| Run tests (Python) | `python -m pytest tests/ -x -q` |
-| Run tests (Node) | `npm test` |
-| Lint (Python) | `ruff check src/` |
-| Lint (Node/JS) | `npm run lint` |
-| Format (Python) | `ruff format src/` |
-| Format (Node/JS) | `npm run format` |
-| Build | `npm run build` or `python -m build` |
-| Type check (Python) | `mypy src/` |
-| Type check (TS) | `npm run type-check` |
+| Make install.sh executable | `chmod +x install.sh` |
+| Test install locally | `bash install.sh --dir /tmp/test-project` |
+| Test npm CLI locally | `node bin/malodeity.js init --dir /tmp/test-project` |
+| Validate JSON | `python -m json.tool templates/settings.json` |
+| Count template lines | `wc -l templates/CLAUDE.base.md` |
 
-## Conventions
-- **Commits:** `type(scope): message` — types: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`
-- **Branch:** `claude/<slug>` for AI-driven work, `feat/<slug>` for features
-- **Naming:** snake_case for Python, camelCase for JS/TS, PascalCase for classes/components
-- **Comments:** none by default — only add when the WHY is non-obvious
-- **Tests:** one test file per source file, co-located in `tests/`
-- **Errors:** fail fast, no silent catches, no empty except blocks
+## Development conventions
+- `install.sh` must be POSIX-compatible bash — no bash 4+ features (`declare -A`, etc.)
+- `bin/malodeity.js` must work with Node.js 18+ and zero npm dependencies
+- Templates are markdown — no front-matter, no special syntax
+- All download URLs use `${REPO_RAW}` variable — never hardcode paths
+- Test with `--dir /tmp/test-<name>` to avoid polluting the repo
 
-## Hard Rules
-- Never force-push `main` or `master`
-- Never skip hooks (`--no-verify`)
-- Never commit `.env`, secrets, or credentials
-- Never add features beyond what the task requires
-- Never add error handling for impossible scenarios
-- Never use `rm -rf` without explicit user instruction
+## Slash commands available
+`/commit` `/ship` `/review` `/fix` `/context` `/design` `/arch` `/perf` `/security` `/data`
 
-## Common Patterns
-
-### Python HTTP client
-```python
-import httpx
-resp = httpx.get(url, timeout=10)
-resp.raise_for_status()
-data = resp.json()
+## Repo layout
+```
+templates/          What gets installed into user projects
+  CLAUDE.base.md    Universal god-level standards
+  CLAUDE.python.md  Python additions
+  CLAUDE.node.md    Node.js/TypeScript additions
+  CLAUDE.mobile.md  React Native + Flutter additions
+  CLAUDE.data.md    Data engineering additions
+  settings.json     .claude/settings.json for user projects
+.claude/
+  settings.json     Config for working on THIS repo
+  commands/         Slash commands (installed into user projects too)
+bin/
+  malodeity.js      npx CLI entry point
+install.sh          Universal bash installer
+package.json        npm package manifest
 ```
 
-### Async Python
-```python
-import asyncio
-async def main():
-    result = await some_coroutine()
-asyncio.run(main())
-```
-
-### Node fetch
-```js
-const res = await fetch(url);
-if (!res.ok) throw new Error(`HTTP ${res.status}`);
-const data = await res.json();
-```
-
-### Docker one-liner
-```bash
-docker build -t app . && docker run --rm -p 8080:8080 app
-```
-
-## Slash Commands
-| Command | What it does |
-|---|---|
-| `/commit` | Stage, write conventional commit, push |
-| `/ship` | lint → test → commit → push |
-| `/review` | Security + logic review of current diff |
-| `/fix` | Diagnose failing test/lint, fix root cause, verify |
-| `/context` | Print branch state, recent commits, open TODOs |
+## Hard rules
+- Never force-push `main`
+- Never skip hooks
+- Keep `install.sh` idempotent — safe to run twice
+- Keep templates under 600 lines total per file — density over length
