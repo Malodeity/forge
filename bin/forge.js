@@ -26,7 +26,6 @@ function runInstall() {
   const stackFlag = stackArg ? `--stack ${stackArg}` : '';
   const dirFlag = `--dir ${path.resolve(dirArg)}`;
 
-  // Try local install.sh first (when running from the repo itself)
   const localScript = path.join(__dirname, '..', 'install.sh');
   if (fs.existsSync(localScript)) {
     console.log('[forge] Using local install.sh');
@@ -34,7 +33,6 @@ function runInstall() {
     return;
   }
 
-  // Remote install
   const hasCurl = commandExists('curl');
   const hasWget = commandExists('wget');
 

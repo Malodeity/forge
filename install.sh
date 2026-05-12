@@ -15,7 +15,6 @@
 #   FORGE_STACK     same as --stack
 set -euo pipefail
 
-# ── version / ref ─────────────────────────────────────────────────────────────
 VERSION="${FORGE_VERSION:-main}"
 REPO_BASE="https://raw.githubusercontent.com/forge-dev/forge"
 REPO_RAW="${REPO_BASE}/${VERSION}"
@@ -23,7 +22,6 @@ REPO_RAW="${REPO_BASE}/${VERSION}"
 TARGET_DIR="."
 FORCE_STACK="${FORGE_STACK:-}"
 
-# ── colours ──────────────────────────────────────────────────────────────────
 BOLD='\033[1m'; GREEN='\033[0;32m'; BLUE='\033[0;34m'
 YELLOW='\033[1;33m'; RED='\033[0;31m'; NC='\033[0m'
 
@@ -32,7 +30,6 @@ ok()   { echo -e "  ${GREEN}✓${NC} $*"; }
 warn() { echo -e "  ${YELLOW}!${NC} $*"; }
 err()  { echo -e "  ${RED}✗${NC} $*" >&2; exit 1; }
 
-# ── arg parsing ───────────────────────────────────────────────────────────────
 while [[ $# -gt 0 ]]; do
   case $1 in
     --dir)     TARGET_DIR="$2"; shift 2 ;;
@@ -49,7 +46,6 @@ done
 
 cd "$TARGET_DIR"
 
-# ── downloader ────────────────────────────────────────────────────────────────
 download() {
   local url="$1" dest="$2"
   mkdir -p "$(dirname "$dest")"
@@ -71,7 +67,6 @@ download_text() {
   fi
 }
 
-# ── stack detection ───────────────────────────────────────────────────────────
 detect_stack() {
   if [[ -n "$FORCE_STACK" ]]; then echo "$FORCE_STACK"; return; fi
 
@@ -100,16 +95,13 @@ detect_stack() {
   fi
 }
 
-# ── install CLAUDE.md ─────────────────────────────────────────────────────────
 install_claude_md() {
   local stack="$1"
   local tmp
   tmp=$(mktemp)
 
-  # Base template
   download_text "${REPO_RAW}/templates/CLAUDE.base.md" > "$tmp"
 
-  # Stack-specific addition
   case "$stack" in
     python)          download_text "${REPO_RAW}/templates/CLAUDE.python.md" >> "$tmp" ;;
     node)            download_text "${REPO_RAW}/templates/CLAUDE.node.md"   >> "$tmp" ;;
@@ -121,7 +113,6 @@ install_claude_md() {
     rust)            download_text "${REPO_RAW}/templates/CLAUDE.rust.md"   >> "$tmp" ;;
   esac
 
-  # Merge or install
   if [[ -f "CLAUDE.md" ]]; then
     warn "Existing CLAUDE.md found — prepending forge standards"
     local existing
@@ -139,15 +130,12 @@ install_claude_md() {
   ok "CLAUDE.md installed (stack: $stack)"
 }
 
-# ── install .claude/ ──────────────────────────────────────────────────────────
 install_claude_dir() {
   mkdir -p .claude/commands
 
-  # Settings
   download "${REPO_RAW}/templates/settings.json" ".claude/settings.json"
   ok ".claude/settings.json"
 
-  # Commands
   local commands=(commit ship review fix context design arch perf security data refactor)
   for cmd in "${commands[@]}"; do
     download "${REPO_RAW}/.claude/commands/${cmd}.md" ".claude/commands/${cmd}.md"
@@ -155,7 +143,6 @@ install_claude_dir() {
   ok ".claude/commands/ (${#commands[@]} commands)"
 }
 
-# ── install .claudeignore ─────────────────────────────────────────────────────
 install_claudeignore() {
   if [[ -f ".claudeignore" ]]; then
     warn ".claudeignore already exists — skipping (manual merge if needed)"
@@ -165,7 +152,6 @@ install_claudeignore() {
   fi
 }
 
-# ── main ──────────────────────────────────────────────────────────────────────
 main() {
   echo ""
   echo -e "${BOLD}forge${NC} — God-level Claude Code engineering standards"

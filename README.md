@@ -208,10 +208,9 @@ npx forge@1.0.0 init
 
 ### Upgrade
 ```bash
-# Pull latest standards into existing install
 npx forge update
 # or
-curl -fsSL .../install.sh | bash  # idempotent — safe to re-run
+curl -fsSL .../install.sh | bash
 ```
 
 ### Install into a specific directory
@@ -222,8 +221,6 @@ bash install.sh --dir /path/to/my-project
 ---
 
 ## Stack Auto-detection
-
-The installer examines your project root and picks the right template:
 
 | Detected by | Stack | Additions |
 |---|---|---|
@@ -244,8 +241,6 @@ Override detection at any time with `--stack`.
 
 ## CI / Validation
 
-Every PR to this repo runs:
-
 | Check | What it validates |
 |---|---|
 | JSON validity | `templates/settings.json` and `.claude/settings.json` parse correctly |
@@ -259,8 +254,6 @@ Every PR to this repo runs:
 
 ## Versioning
 
-forge uses semantic versioning:
-
 - **Patch** (`v1.0.x`): corrections to existing standards, wording improvements
 - **Minor** (`v1.x.0`): new sections, new stack templates, new slash commands
 - **Major** (`vX.0.0`): breaking changes to the `CLAUDE.md` structure or command interface
@@ -271,7 +264,7 @@ Pin to a minor version for stability: `FORGE_VERSION=v1.2.0`
 
 ## Contributing
 
-The standards in `templates/CLAUDE.base.md` represent real-world senior engineering judgment, not textbook best practices. Contributions must be:
+Contributions must be:
 
 1. **Specific** — "prefer X over Y when Z" not "use good patterns"
 2. **Actionable** — Claude must be able to apply it directly
