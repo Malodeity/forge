@@ -23,20 +23,14 @@
 
 ### Async Patterns
 ```typescript
-// Parallel, not sequential
 const [user, orders] = await Promise.all([
   fetchUser(userId),
   fetchOrders(userId),
 ]);
 
-// Stream large datasets — never load all rows
 for await (const batch of db.streamQuery(sql)) {
   await processBatch(batch);
 }
-
-// Typed error handling
-const result = await tryCatch(riskyOperation());
-if (result.error) return handleError(result.error);
 ```
 - `Promise.all` for independent concurrent operations — never `await` in a loop
 - Streams for data >10K rows — `for await...of` on async iterators
@@ -44,7 +38,6 @@ if (result.error) return handleError(result.error);
 
 ### Error Handling
 ```typescript
-// Result type (no exceptions on the happy path)
 type Result<T, E = Error> = { ok: true; value: T } | { ok: false; error: E };
 
 async function createOrder(input: CreateOrderInput): Promise<Result<Order>> {
@@ -64,7 +57,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 describe('OrderService.create', () => {
   let repo: FakeOrderRepository;
-
   beforeEach(() => { repo = new FakeOrderRepository(); });
 
   it('emits order.created event on success', async () => {
@@ -76,22 +68,6 @@ describe('OrderService.create', () => {
 ```
 - Vitest over Jest for new projects — faster, ESM native
 - `vi.mock` for external modules; inject fakes for domain dependencies
-- `supertest` / `@hono/testing` for HTTP integration tests
-
-### Project Layout
-```
-src/
-  domain/         # Types, entities, domain logic (no deps on infra)
-  application/    # Use cases, orchestration
-  adapters/       # DB, HTTP clients, queue implementations
-  api/            # Routes, middleware, request/response mapping
-  config/         # Env parsing, feature flags
-tests/
-  unit/
-  integration/
-package.json
-tsconfig.json
-```
 
 ### Tools
 | Tool | Purpose |
@@ -99,6 +75,5 @@ tsconfig.json
 | `vitest` | Testing (fast, ESM) |
 | `eslint` + `@typescript-eslint` | Linting |
 | `prettier` | Formatting |
-| `tsx` / `ts-node` | Dev execution |
 | `zod` | Runtime schema validation |
 | `pino` | Structured JSON logging |

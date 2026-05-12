@@ -38,7 +38,6 @@ class OrderNotFoundError(ValueError):
         super().__init__(f"Order {order_id!r} not found")
         self.order_id = order_id
 
-# Domain-specific exceptions, not bare Exception
 try:
     order = get_order(order_id)
 except OrderNotFoundError:
@@ -72,14 +71,14 @@ async def test_create_order_emits_event(order_repo: FakeOrderRepository) -> None
 src/
   <package>/
     __init__.py
-    domain/         # Entities, value objects, domain events
-    application/    # Use cases, services
-    adapters/       # DB, HTTP, queue implementations
-    api/            # FastAPI/Flask routes
+    domain/
+    application/
+    adapters/
+    api/
 tests/
   unit/
   integration/
-pyproject.toml      # Single source of truth for deps + tool config
+pyproject.toml
 ```
 
 ### Tools
