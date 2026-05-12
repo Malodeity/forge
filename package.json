@@ -1,5 +1,5 @@
 {
-  "name": "malodeity",
+  "name": "forge",
   "version": "1.0.0",
   "description": "God-level Claude Code engineering standards. Install in any project — data engineering, mobile, web backend, AI/ML.",
   "keywords": [
@@ -10,14 +10,14 @@
     "system-design",
     "ai-engineering"
   ],
-  "homepage": "https://github.com/Malodeity/Malodeity",
+  "homepage": "https://github.com/Malodeity/forge",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Malodeity/Malodeity.git"
+    "url": "https://github.com/Malodeity/forge.git"
   },
   "license": "MIT",
   "bin": {
-    "malodeity": "./bin/malodeity.js"
+    "forge": "./bin/forge.js"
   },
   "scripts": {
     "test": "echo 'No tests for the installer itself' && exit 0"

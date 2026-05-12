@@ -1,6 +1,6 @@
 # Engineering Standards
 
-> Installed by [malodeity](https://github.com/Malodeity/Malodeity). Run `npx malodeity update` to upgrade.
+> Installed by [forge](https://github.com/Malodeity/forge). Run `npx forge update` to upgrade.
 
 ## Philosophy
 - Correctness > performance > elegance — in that order, always

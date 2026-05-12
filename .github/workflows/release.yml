@@ -29,21 +29,21 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.version.outputs.version }}
-          name: malodeity ${{ steps.version.outputs.version }}
+          name: forge ${{ steps.version.outputs.version }}
           body: |
             ## Install
 
             ```bash
             # Latest
-            curl -fsSL https://raw.githubusercontent.com/Malodeity/Malodeity/main/install.sh | bash
+            curl -fsSL https://raw.githubusercontent.com/Malodeity/forge/main/install.sh | bash
 
             # Pin to this version
-            curl -fsSL https://raw.githubusercontent.com/Malodeity/Malodeity/${{ steps.version.outputs.version }}/install.sh | bash
+            curl -fsSL https://raw.githubusercontent.com/Malodeity/forge/${{ steps.version.outputs.version }}/install.sh | bash
 
             # npm
-            npx malodeity@${{ steps.version.outputs.version }} init
+            npx forge@${{ steps.version.outputs.version }} init
             ```
 
-            See [README](https://github.com/Malodeity/Malodeity#readme) for full documentation.
+            See [README](https://github.com/Malodeity/forge#readme) for full documentation.
           draft: false
           prerelease: ${{ contains(steps.version.outputs.version, '-') }}

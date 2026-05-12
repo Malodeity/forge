@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# malodeity — God-level Claude Code engineering standards
+# forge — God-level Claude Code engineering standards
 #
 # Usage:
-#   curl -fsSL https://raw.githubusercontent.com/Malodeity/Malodeity/main/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/Malodeity/forge/main/install.sh | bash
 #   bash install.sh [--dir PATH] [--stack STACK] [--version TAG]
 #
 # Options:
@@ -11,23 +11,23 @@
 #   --version TAG     Pin to a specific release tag (e.g. v1.2.0). Default: main
 #
 # Environment variables (alternative to flags):
-#   MALODEITY_VERSION   same as --version
-#   MALODEITY_STACK     same as --stack
+#   FORGE_VERSION   same as --version
+#   FORGE_STACK     same as --stack
 set -euo pipefail
 
 # ── version / ref ─────────────────────────────────────────────────────────────
-VERSION="${MALODEITY_VERSION:-main}"
-REPO_BASE="https://raw.githubusercontent.com/Malodeity/Malodeity"
+VERSION="${FORGE_VERSION:-main}"
+REPO_BASE="https://raw.githubusercontent.com/Malodeity/forge"
 REPO_RAW="${REPO_BASE}/${VERSION}"
 
 TARGET_DIR="."
-FORCE_STACK="${MALODEITY_STACK:-}"
+FORCE_STACK="${FORGE_STACK:-}"
 
 # ── colours ──────────────────────────────────────────────────────────────────
 BOLD='\033[1m'; GREEN='\033[0;32m'; BLUE='\033[0;34m'
 YELLOW='\033[1;33m'; RED='\033[0;31m'; NC='\033[0m'
 
-log()  { echo -e "${BLUE}[malodeity]${NC} $*"; }
+log()  { echo -e "${BLUE}[forge]${NC} $*"; }
 ok()   { echo -e "  ${GREEN}✓${NC} $*"; }
 warn() { echo -e "  ${YELLOW}!${NC} $*"; }
 err()  { echo -e "  ${RED}✗${NC} $*" >&2; exit 1; }
@@ -41,7 +41,7 @@ while [[ $# -gt 0 ]]; do
     -h|--help)
       echo "Usage: install.sh [--dir PATH] [--stack python|node|mobile|data|go|rust] [--version TAG]"
       echo "  Pin to release:  bash install.sh --version v1.0.0"
-      echo "  Env var:         MALODEITY_VERSION=v1.0.0 bash install.sh"
+      echo "  Env var:         FORGE_VERSION=v1.0.0 bash install.sh"
       exit 0 ;;
     *) err "Unknown argument: $1" ;;
   esac
@@ -123,7 +123,7 @@ install_claude_md() {
 
   # Merge or install
   if [[ -f "CLAUDE.md" ]]; then
-    warn "Existing CLAUDE.md found — prepending malodeity standards"
+    warn "Existing CLAUDE.md found — prepending forge standards"
     local existing
     existing=$(cat CLAUDE.md)
     cat "$tmp" > CLAUDE.md
@@ -168,7 +168,7 @@ install_claudeignore() {
 # ── main ──────────────────────────────────────────────────────────────────────
 main() {
   echo ""
-  echo -e "${BOLD}malodeity${NC} — God-level Claude Code engineering standards"
+  echo -e "${BOLD}forge${NC} — God-level Claude Code engineering standards"
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
   echo ""
 
