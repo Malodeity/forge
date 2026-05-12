@@ -40,7 +40,7 @@ For each non-trivial algorithm:
 
 ### 7. Memory profiling hints
 ```bash
-grep -rn "\.map(.*\.map\|\.filter(.*\.filter" src/ | head -20  # chained array ops on large data
+grep -rn "\.map(.*\.map\|\.filter(.*\.filter" src/ | head -20
 ```
 Flag: creating multiple intermediate arrays on large datasets — use streaming or single-pass.
 
