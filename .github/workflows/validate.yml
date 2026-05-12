@@ -156,7 +156,7 @@ jobs:
       - name: Run CLI locally
         run: |
           mkdir -p /tmp/test-npm
-          node bin/malodeity.js init --dir /tmp/test-npm
+          node bin/forge.js init --dir /tmp/test-npm
       - name: Verify output
         run: |
           test -f /tmp/test-npm/CLAUDE.md

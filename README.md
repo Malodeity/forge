@@ -1,11 +1,11 @@
-# malodeity
+# forge
 
 **God-level engineering standards for Claude Code. Install once, works in any project.**
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Malodeity/Malodeity/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/forge-dev/forge/main/install.sh | bash
 # or
-npx malodeity init
+npx forge init
 ```
 
 ---
@@ -23,13 +23,13 @@ That token waste compounds. On a typical task:
 
 Beyond tokens: without explicit standards, Claude defaults to safe-but-mediocre choices. It won't pick CQRS when CQRS is right. It won't set up the Outbox pattern when eventual consistency demands it. It won't apply STRIDE threat modeling before writing a new auth flow. Not because it can't — because it had no signal that you expected that level.
 
-**malodeity solves both problems at once.**
+**forge solves both problems at once.**
 
 ---
 
 ## What It Is
 
-malodeity is an installable Claude Code configuration package. One command adds it to any project:
+forge is an installable Claude Code configuration package. One command adds it to any project:
 
 - A `CLAUDE.md` file with comprehensive engineering standards that Claude reads at the start of every session
 - A `.claude/` directory with pre-approved permissions, automatic hooks, and 11 slash commands
@@ -43,7 +43,7 @@ After installation, every Claude Code session in your project starts fully orien
 
 ### 1. CLAUDE.md — Pre-loaded context
 
-Claude Code reads `CLAUDE.md` at the start of every session before processing your first message. malodeity's `CLAUDE.md` is a dense, structured reference document that encodes everything a senior engineer would bring to the first day on your project.
+Claude Code reads `CLAUDE.md` at the start of every session before processing your first message. forge's `CLAUDE.md` is a dense, structured reference document that encodes everything a senior engineer would bring to the first day on your project.
 
 Instead of:
 > Claude explores 15 files → infers the architecture → makes mediocre choices → uses 400 tokens doing it
@@ -57,7 +57,7 @@ The document is built from a universal base plus auto-detected stack-specific ad
 
 Every `git diff`, `npm test`, `find .`, and `grep` normally triggers a permission prompt. That's a full back-and-forth turn per operation: Claude requests, you approve, Claude proceeds.
 
-malodeity's `.claude/settings.json` pre-approves ~35 safe, read-only and standard operations so Claude executes them without prompting. Destructive operations (`git push --force origin main`, `rm -rf /`) remain explicitly blocked.
+forge's `.claude/settings.json` pre-approves ~35 safe, read-only and standard operations so Claude executes them without prompting. Destructive operations (`git push --force origin main`, `rm -rf /`) remain explicitly blocked.
 
 ### 3. Automatic hooks — No follow-up steps
 
@@ -160,7 +160,7 @@ SOLID applied concretely (each principle with a one-line violation detector), fu
 
 ## Token Reduction
 
-Installing malodeity cuts token usage by **~58% per task**:
+Installing forge cuts token usage by **~58% per task**:
 
 | Layer | How it reduces tokens | Saving |
 |---|---|---|
@@ -180,12 +180,12 @@ The 25% from CLAUDE.md is the biggest lever. Discovery is the largest token sink
 
 ### Any project (universal)
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Malodeity/Malodeity/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/forge-dev/forge/main/install.sh | bash
 ```
 
 ### Node.js projects (npm)
 ```bash
-npx malodeity init
+npx forge init
 ```
 
 ### Force a specific stack
@@ -197,19 +197,19 @@ curl -fsSL .../install.sh | bash -s -- --stack python
 ### Pin to a specific version
 ```bash
 # Use a release tag — safe for production projects
-curl -fsSL https://raw.githubusercontent.com/Malodeity/Malodeity/v1.0.0/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/forge-dev/forge/v1.0.0/install.sh | bash
 
 # Or with the env var
-MALODEITY_VERSION=v1.0.0 bash install.sh
+FORGE_VERSION=v1.0.0 bash install.sh
 
 # npm
-npx malodeity@1.0.0 init
+npx forge@1.0.0 init
 ```
 
 ### Upgrade
 ```bash
 # Pull latest standards into existing install
-npx malodeity update
+npx forge update
 # or
 curl -fsSL .../install.sh | bash  # idempotent — safe to re-run
 ```
@@ -259,13 +259,13 @@ Every PR to this repo runs:
 
 ## Versioning
 
-malodeity uses semantic versioning:
+forge uses semantic versioning:
 
 - **Patch** (`v1.0.x`): corrections to existing standards, wording improvements
 - **Minor** (`v1.x.0`): new sections, new stack templates, new slash commands
 - **Major** (`vX.0.0`): breaking changes to the `CLAUDE.md` structure or command interface
 
-Pin to a minor version for stability: `MALODEITY_VERSION=v1.2.0`
+Pin to a minor version for stability: `FORGE_VERSION=v1.2.0`
 
 ---
 

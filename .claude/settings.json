@@ -51,7 +51,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd /home/user/Malodeity && (ruff check --quiet \"$CLAUDE_TOOL_INPUT_FILE_PATH\" 2>/dev/null || true)"
+            "command": "cd \"$(git rev-parse --show-toplevel)\" && (ruff check --quiet \"$CLAUDE_TOOL_INPUT_FILE_PATH\" 2>/dev/null || true)"
           }
         ]
       }
@@ -61,7 +61,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd /home/user/Malodeity && echo \"--- Session summary ---\" && git branch --show-current && git log --oneline -3 && git status --short"
+            "command": "cd \"$(git rev-parse --show-toplevel)\" && echo \"--- Session summary ---\" && git branch --show-current && git log --oneline -3 && git status --short"
           }
         ]
       }
