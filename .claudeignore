@@ -1,0 +1,62 @@
+# Build outputs
+dist/
+build/
+out/
+target/
+*.egg-info/
+
+# Dependencies
+node_modules/
+.venv/
+venv/
+env/
+__pypackages__/
+
+# Cache
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.cache/
+*.pyc
+*.pyo
+
+# Test coverage
+coverage/
+.coverage
+htmlcov/
+lcov.info
+
+# Logs
+*.log
+logs/
+
+# Lock files (large, rarely useful for Claude)
+package-lock.json
+yarn.lock
+poetry.lock
+Pipfile.lock
+*.lock
+
+# Minified assets
+*.min.js
+*.min.css
+*.bundle.js
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets (should never be read)
+.env
+.env.*
+*.pem
+*.key
+secrets/
+credentials/
