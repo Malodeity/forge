@@ -2,7 +2,7 @@
 # forge — God-level Claude Code engineering standards
 #
 # Usage:
-#   curl -fsSL https://raw.githubusercontent.com/Malodeity/forge/main/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/forge-dev/forge/main/install.sh | bash
 #   bash install.sh [--dir PATH] [--stack STACK] [--version TAG]
 #
 # Options:
@@ -17,7 +17,7 @@ set -euo pipefail
 
 # ── version / ref ─────────────────────────────────────────────────────────────
 VERSION="${FORGE_VERSION:-main}"
-REPO_BASE="https://raw.githubusercontent.com/Malodeity/forge"
+REPO_BASE="https://raw.githubusercontent.com/forge-dev/forge"
 REPO_RAW="${REPO_BASE}/${VERSION}"
 
 TARGET_DIR="."

@@ -9,7 +9,7 @@ const { execSync } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 
-const REPO_RAW = 'https://raw.githubusercontent.com/Malodeity/forge/main';
+const REPO_RAW = 'https://raw.githubusercontent.com/forge-dev/forge/main';
 const INSTALL_SCRIPT_URL = `${REPO_RAW}/install.sh`;
 
 const args = process.argv.slice(2);

@@ -10,10 +10,10 @@
     "system-design",
     "ai-engineering"
   ],
-  "homepage": "https://github.com/Malodeity/forge",
+  "homepage": "https://github.com/forge-dev/forge",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Malodeity/forge.git"
+    "url": "https://github.com/forge-dev/forge.git"
   },
   "license": "MIT",
   "bin": {

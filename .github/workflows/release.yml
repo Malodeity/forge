@@ -35,15 +35,15 @@ jobs:
 
             ```bash
             # Latest
-            curl -fsSL https://raw.githubusercontent.com/Malodeity/forge/main/install.sh | bash
+            curl -fsSL https://raw.githubusercontent.com/forge-dev/forge/main/install.sh | bash
 
             # Pin to this version
-            curl -fsSL https://raw.githubusercontent.com/Malodeity/forge/${{ steps.version.outputs.version }}/install.sh | bash
+            curl -fsSL https://raw.githubusercontent.com/forge-dev/forge/${{ steps.version.outputs.version }}/install.sh | bash
 
             # npm
             npx forge@${{ steps.version.outputs.version }} init
             ```
 
-            See [README](https://github.com/Malodeity/forge#readme) for full documentation.
+            See [README](https://github.com/forge-dev/forge#readme) for full documentation.
           draft: false
           prerelease: ${{ contains(steps.version.outputs.version, '-') }}

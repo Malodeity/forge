@@ -3,7 +3,7 @@
 **God-level engineering standards for Claude Code. Install once, works in any project.**
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Malodeity/forge/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/forge-dev/forge/main/install.sh | bash
 # or
 npx forge init
 ```
@@ -180,7 +180,7 @@ The 25% from CLAUDE.md is the biggest lever. Discovery is the largest token sink
 
 ### Any project (universal)
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Malodeity/forge/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/forge-dev/forge/main/install.sh | bash
 ```
 
 ### Node.js projects (npm)
@@ -197,10 +197,10 @@ curl -fsSL .../install.sh | bash -s -- --stack python
 ### Pin to a specific version
 ```bash
 # Use a release tag — safe for production projects
-curl -fsSL https://raw.githubusercontent.com/Malodeity/forge/v1.0.0/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/forge-dev/forge/v1.0.0/install.sh | bash
 
 # Or with the env var
-MALODEITY_VERSION=v1.0.0 bash install.sh
+FORGE_VERSION=v1.0.0 bash install.sh
 
 # npm
 npx forge@1.0.0 init
@@ -265,7 +265,7 @@ forge uses semantic versioning:
 - **Minor** (`v1.x.0`): new sections, new stack templates, new slash commands
 - **Major** (`vX.0.0`): breaking changes to the `CLAUDE.md` structure or command interface
 
-Pin to a minor version for stability: `MALODEITY_VERSION=v1.2.0`
+Pin to a minor version for stability: `FORGE_VERSION=v1.2.0`
 
 ---
 
