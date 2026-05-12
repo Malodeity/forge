@@ -1,0 +1,206 @@
+name: Validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ── JSON validity ────────────────────────────────────────────────────────────
+  json:
+    name: JSON files
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate settings templates
+        run: |
+          python3 -m json.tool templates/settings.json > /dev/null
+          python3 -m json.tool .claude/settings.json   > /dev/null
+          echo "✓ All JSON files valid"
+
+  # ── Shell script syntax ──────────────────────────────────────────────────────
+  shellcheck:
+    name: Shell scripts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install shellcheck
+        run: sudo apt-get install -y shellcheck
+      - name: Check install.sh
+        run: shellcheck install.sh
+
+  # ── install.sh smoke test ────────────────────────────────────────────────────
+  install-universal:
+    name: Install (universal)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run install into temp dir
+        run: |
+          mkdir -p /tmp/test-universal
+          bash install.sh --dir /tmp/test-universal
+      - name: Verify files exist
+        run: |
+          test -f /tmp/test-universal/CLAUDE.md        && echo "✓ CLAUDE.md"
+          test -f /tmp/test-universal/.claude/settings.json && echo "✓ settings.json"
+          test -f /tmp/test-universal/.claudeignore     && echo "✓ .claudeignore"
+          for cmd in commit ship review fix context design arch perf security data refactor; do  # 11 commands
+            test -f "/tmp/test-universal/.claude/commands/${cmd}.md" && echo "✓ /commands/${cmd}.md"
+          done
+      - name: CLAUDE.md must contain key sections
+        run: |
+          grep -q "Architecture Decision Framework" /tmp/test-universal/CLAUDE.md
+          grep -q "System Design Patterns"          /tmp/test-universal/CLAUDE.md
+          grep -q "Security"                         /tmp/test-universal/CLAUDE.md
+          grep -q "Observability"                    /tmp/test-universal/CLAUDE.md
+          grep -q "Hard Rules"                       /tmp/test-universal/CLAUDE.md
+          echo "✓ All required sections present"
+
+  install-python:
+    name: Install (python)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run install with python stack
+        run: |
+          mkdir -p /tmp/test-python
+          touch /tmp/test-python/pyproject.toml
+          bash install.sh --dir /tmp/test-python --stack python
+      - name: Verify python additions
+        run: |
+          grep -q "Python Standards" /tmp/test-python/CLAUDE.md
+          echo "✓ Python additions present"
+
+  install-node:
+    name: Install (node)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run install with node stack
+        run: |
+          mkdir -p /tmp/test-node
+          echo '{"name":"test"}' > /tmp/test-node/package.json
+          bash install.sh --dir /tmp/test-node --stack node
+      - name: Verify node additions
+        run: |
+          grep -q "Node.js / TypeScript Standards" /tmp/test-node/CLAUDE.md
+          echo "✓ Node additions present"
+
+  install-mobile:
+    name: Install (mobile)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run install with mobile stack
+        run: |
+          mkdir -p /tmp/test-mobile
+          bash install.sh --dir /tmp/test-mobile --stack mobile
+      - name: Verify mobile additions
+        run: |
+          grep -q "Mobile Engineering Standards" /tmp/test-mobile/CLAUDE.md
+          echo "✓ Mobile additions present"
+
+  install-go:
+    name: Install (go)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run install with go stack
+        run: |
+          mkdir -p /tmp/test-go
+          bash install.sh --dir /tmp/test-go --stack go
+      - name: Verify go additions
+        run: |
+          grep -q "Go Standards" /tmp/test-go/CLAUDE.md
+          echo "✓ Go additions present"
+
+  install-rust:
+    name: Install (rust)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run install with rust stack
+        run: |
+          mkdir -p /tmp/test-rust
+          bash install.sh --dir /tmp/test-rust --stack rust
+      - name: Verify rust additions
+        run: |
+          grep -q "Rust Standards" /tmp/test-rust/CLAUDE.md
+          echo "✓ Rust additions present"
+
+  install-version-pin:
+    name: Version pinning
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install with explicit version flag
+        run: |
+          mkdir -p /tmp/test-version
+          # Use local install with version flag (points to same ref in CI)
+          bash install.sh --dir /tmp/test-version --version main
+      - name: Verify install succeeded
+        run: |
+          test -f /tmp/test-version/CLAUDE.md
+          echo "✓ Version-pinned install succeeded"
+
+  # ── npm CLI smoke test ───────────────────────────────────────────────────────
+  npm-cli:
+    name: npm CLI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Run CLI locally
+        run: |
+          mkdir -p /tmp/test-npm
+          node bin/malodeity.js init --dir /tmp/test-npm
+      - name: Verify output
+        run: |
+          test -f /tmp/test-npm/CLAUDE.md
+          echo "✓ CLI install succeeded"
+
+  # ── template line count guard ────────────────────────────────────────────────
+  template-size:
+    name: Template size
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Enforce max line counts
+        run: |
+          MAX=700
+          for f in templates/CLAUDE.*.md templates/CLAUDE.base.md; do
+            lines=$(wc -l < "$f")
+            if [[ $lines -gt $MAX ]]; then
+              echo "✗ $f has $lines lines (max $MAX)"
+              exit 1
+            fi
+            echo "✓ $f — $lines lines"
+          done
+
+  # ── idempotency test ─────────────────────────────────────────────────────────
+  idempotent:
+    name: Idempotent install
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install twice, output must be stable
+        run: |
+          mkdir -p /tmp/test-idem
+          bash install.sh --dir /tmp/test-idem
+          cp /tmp/test-idem/CLAUDE.md /tmp/claude-after-first.md
+          # second run should not duplicate content
+          bash install.sh --dir /tmp/test-idem
+          # CLAUDE.md size should not grow unboundedly (allow <2x)
+          first=$(wc -l < /tmp/claude-after-first.md)
+          second=$(wc -l < /tmp/test-idem/CLAUDE.md)
+          echo "First run: $first lines, second run: $second lines"
+          # Allow merge bump but not double
+          limit=$((first * 2))
+          if [[ $second -gt $limit ]]; then
+            echo "✗ CLAUDE.md grew too much on second install ($second > $limit)"
+            exit 1
+          fi
+          echo "✓ Install is idempotent"

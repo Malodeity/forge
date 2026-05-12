@@ -1,12 +1,27 @@
 #!/usr/bin/env bash
 # malodeity — God-level Claude Code engineering standards
-# Usage: curl -fsSL https://raw.githubusercontent.com/Malodeity/Malodeity/main/install.sh | bash
-# Or:    bash install.sh [--dir /path/to/project] [--stack python|node|mobile|data]
+#
+# Usage:
+#   curl -fsSL https://raw.githubusercontent.com/Malodeity/Malodeity/main/install.sh | bash
+#   bash install.sh [--dir PATH] [--stack STACK] [--version TAG]
+#
+# Options:
+#   --dir PATH        Install into PATH instead of current directory
+#   --stack STACK     Force stack: python|node|mobile|data|go|rust|universal
+#   --version TAG     Pin to a specific release tag (e.g. v1.2.0). Default: main
+#
+# Environment variables (alternative to flags):
+#   MALODEITY_VERSION   same as --version
+#   MALODEITY_STACK     same as --stack
 set -euo pipefail
 
-REPO_RAW="https://raw.githubusercontent.com/Malodeity/Malodeity/main"
+# ── version / ref ─────────────────────────────────────────────────────────────
+VERSION="${MALODEITY_VERSION:-main}"
+REPO_BASE="https://raw.githubusercontent.com/Malodeity/Malodeity"
+REPO_RAW="${REPO_BASE}/${VERSION}"
+
 TARGET_DIR="."
-FORCE_STACK=""
+FORCE_STACK="${MALODEITY_STACK:-}"
 
 # ── colours ──────────────────────────────────────────────────────────────────
 BOLD='\033[1m'; GREEN='\033[0;32m'; BLUE='\033[0;34m'
@@ -20,10 +35,13 @@ err()  { echo -e "  ${RED}✗${NC} $*" >&2; exit 1; }
 # ── arg parsing ───────────────────────────────────────────────────────────────
 while [[ $# -gt 0 ]]; do
   case $1 in
-    --dir)   TARGET_DIR="$2"; shift 2 ;;
-    --stack) FORCE_STACK="$2"; shift 2 ;;
+    --dir)     TARGET_DIR="$2"; shift 2 ;;
+    --stack)   FORCE_STACK="$2"; shift 2 ;;
+    --version) VERSION="$2"; REPO_RAW="${REPO_BASE}/${VERSION}"; shift 2 ;;
     -h|--help)
-      echo "Usage: install.sh [--dir PATH] [--stack python|node|mobile|data]"
+      echo "Usage: install.sh [--dir PATH] [--stack python|node|mobile|data|go|rust] [--version TAG]"
+      echo "  Pin to release:  bash install.sh --version v1.0.0"
+      echo "  Env var:         MALODEITY_VERSION=v1.0.0 bash install.sh"
       exit 0 ;;
     *) err "Unknown argument: $1" ;;
   esac
@@ -95,10 +113,12 @@ install_claude_md() {
   case "$stack" in
     python)          download_text "${REPO_RAW}/templates/CLAUDE.python.md" >> "$tmp" ;;
     node)            download_text "${REPO_RAW}/templates/CLAUDE.node.md"   >> "$tmp" ;;
-    mobile-rn)       download_text "${REPO_RAW}/templates/CLAUDE.mobile.md" >> "$tmp" ;;
-    mobile-flutter)  download_text "${REPO_RAW}/templates/CLAUDE.mobile.md" >> "$tmp" ;;
+    mobile|mobile-rn|mobile-flutter)
+                     download_text "${REPO_RAW}/templates/CLAUDE.mobile.md" >> "$tmp" ;;
     data)            download_text "${REPO_RAW}/templates/CLAUDE.data.md"   >> "$tmp"
                      download_text "${REPO_RAW}/templates/CLAUDE.python.md" >> "$tmp" ;;
+    go)              download_text "${REPO_RAW}/templates/CLAUDE.go.md"     >> "$tmp" ;;
+    rust)            download_text "${REPO_RAW}/templates/CLAUDE.rust.md"   >> "$tmp" ;;
   esac
 
   # Merge or install
@@ -128,7 +148,7 @@ install_claude_dir() {
   ok ".claude/settings.json"
 
   # Commands
-  local commands=(commit ship review fix context design arch perf security data)
+  local commands=(commit ship review fix context design arch perf security data refactor)
   for cmd in "${commands[@]}"; do
     download "${REPO_RAW}/.claude/commands/${cmd}.md" ".claude/commands/${cmd}.md"
   done
@@ -165,23 +185,27 @@ main() {
   echo ""
   echo -e "${GREEN}${BOLD}✓ Installation complete${NC}"
   echo ""
+  echo "Version : ${VERSION}"
+  echo "Stack   : ${stack}"
+  echo ""
   echo "Files installed:"
   echo "  CLAUDE.md"
   echo "  .claude/settings.json"
-  echo "  .claude/commands/{commit,ship,review,fix,context,design,arch,perf,security,data}"
+  echo "  .claude/commands/{commit,ship,review,fix,context,design,arch,perf,security,data,refactor}"
   echo "  .claudeignore"
   echo ""
   echo "Slash commands available in Claude Code:"
-  echo "  /commit   Stage + conventional commit + push"
-  echo "  /ship     lint → test → commit → push"
-  echo "  /review   Security + logic review of diff"
-  echo "  /fix      Diagnose failing test/lint, fix root cause"
-  echo "  /context  Print full session orientation"
-  echo "  /design   System design analysis"
-  echo "  /arch     Architecture review"
-  echo "  /perf     Performance audit"
-  echo "  /security Deep security audit"
-  echo "  /data     Data engineering review"
+  echo "  /commit    Stage + conventional commit + push"
+  echo "  /ship      lint → test → commit → push"
+  echo "  /review    Security + logic review of diff"
+  echo "  /fix       Diagnose failing test/lint, fix root cause"
+  echo "  /context   Print full session orientation"
+  echo "  /design    System design analysis"
+  echo "  /arch      Architecture review"
+  echo "  /perf      Performance audit"
+  echo "  /security  Deep security audit"
+  echo "  /data      Data engineering review"
+  echo "  /refactor  Safe incremental refactoring"
   echo ""
   echo -e "Start ${BOLD}claude${NC} in this directory. Claude will follow the standards."
   echo ""
